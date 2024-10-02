@@ -6,9 +6,9 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 1.0f;
     private Rigidbody rb;
-    
 
-    // Start is called before the first frame update
+
+   
     void Start()
     {
         // Gets the rigidbody component attached to this gameObject  
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetButtonDown("Jump"))
         {
-            rb.AddForce(new Vector3(0, 200, 0));
+            rb.AddForce(new Vector3(0, 1000, 0));
         }
     }
 
