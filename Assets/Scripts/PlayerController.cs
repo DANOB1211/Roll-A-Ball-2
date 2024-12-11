@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     GameObject resetPoint;
     bool resetting = false;
     Color originalColour;
+    CameraController cameraController;
   
 
    
@@ -34,6 +35,8 @@ public class PlayerController : MonoBehaviour
         //Reset point code
         resetPoint = GameObject.Find("Reset Point");
         originalColour = GetComponent<Renderer>().material.color;
+
+        cameraController = FindObjectOfType<CameraController>();
     }
 
     // Update is called once per frame
@@ -56,6 +59,14 @@ public class PlayerController : MonoBehaviour
         if(Input.GetButtonDown("Jump"))
         {
             rb.AddForce(new Vector3(0, 1000, 0));
+        }
+
+        if(cameraController.cameraStyle == CameraStyle.Free)
+        {
+            //rotates player to the direction of camera
+            transform.eulerAngles = Camera.main.transform.eulerAngles;
+            //translates the input vectors into coordinates 
+            movement = transform.TransformDirection(movement);
         }
     }
 
@@ -95,25 +106,25 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(ResetPlayer());
         }
+    }
 
     public IEnumerator ResetPlayer()
+    {
+        resetting = true;
+        GetComponent<Renderer>().material.color = Color.black;
+        rb.velocity = Vector3.zero;
+        Vector3 startPos = transform.position;
+        float resetSpeed = 2f;
+        var i = 0.0f;
+        var rate = 1.0f / resetSpeed;
+        while (i < 1.0f)
         {
-            resetting = true;
-            GetComponent<Renderer>().material.color = Color.black;
-            rb.velocity = Vector3.zero;
-            Vector3 startPos = transform.position;
-            float resetSpeed = 2f;
-            var i = 0.0f;
-            var rate = 1.0f / resetSpeed;
-            while (i < 1.0f)
-            {
-                i += Time.deltaTime * rate;
-                transform.position = Vector3.Lerp(startPos, resetPoint.transform.position, i);
-                yield return null;
-            }
-            GetComponent<Renderer>().material.color = originalColour;
-            resetting = false;
+            i += Time.deltaTime * rate;
+            transform.position = Vector3.Lerp(startPos, resetPoint.transform.position, i);
+            yield return null;
         }
+        GetComponent<Renderer>().material.color = originalColour;
+        resetting = false;
     }
 
 }
