@@ -1,10 +1,11 @@
+using TMPro;
 using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
     public float currentTime;
     private bool isTiming;
-    
+
 
     // Update is called once per frame
     void Update()
@@ -26,4 +27,6 @@ public class Timer : MonoBehaviour
     {
         isTiming = false;
     }
+
+
 }

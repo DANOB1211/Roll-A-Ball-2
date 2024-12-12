@@ -11,16 +11,17 @@ public class PlayerController : MonoBehaviour
     public float speed = 1.0f;
     private Rigidbody rb;
     private int pickupCount;
-    private Timer timer;
+    public Timer timer;
     GameObject resetPoint;
     bool resetting = false;
     Color originalColour;
-    CameraController cameraController;
+    public CameraController cameraController;
   
 
    
     void Start()
     {
+        Time.timeScale = 1;
         // Gets the rigidbody component attached to this gameObject  
         rb = GetComponent<Rigidbody>();
         //Gets the number of pickups in our scene
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
         //Run the check pickups function
         CheckPickups();
         //Gets the timer object 
-        timer = FindObjectOfType<Timer>();
+        timer = FindFirstObjectByType<Timer>();
         timer.StartTimer();
         //Game over screen code
         gameOverScreen.SetActive(false);
@@ -36,7 +37,7 @@ public class PlayerController : MonoBehaviour
         resetPoint = GameObject.Find("Reset Point");
         originalColour = GetComponent<Renderer>().material.color;
 
-        cameraController = FindObjectOfType<CameraController>();
+        cameraController = FindFirstObjectByType<CameraController>();
     }
 
     // Update is called once per frame
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(new Vector3(0, 1000, 0));
         }
 
-        if(cameraController.cameraStyle == CameraStyle.Free)
+        //if(cameraController.cameraStyle == CameraStyle.Free)
         {
             //rotates player to the direction of camera
             transform.eulerAngles = Camera.main.transform.eulerAngles;
