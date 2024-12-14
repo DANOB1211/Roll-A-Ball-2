@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     public CameraController cameraController;
     SoundController soundController;
     GameController gameController;
+
+
   
 
    
@@ -46,6 +48,9 @@ public class PlayerController : MonoBehaviour
         soundController = FindObjectOfType<SoundController>();
 
         gameController = FindObjectOfType<GameController>();
+        timer = FindObjectOfType<Timer>();
+        if (gameController.gameType == GameType.SpeedRun)
+            StartCoroutine(timer.StartCountdown());
     }
 
     // Update is called once per frame
@@ -55,6 +60,9 @@ public class PlayerController : MonoBehaviour
             return;
 
         if (gameController.controlType == ControlType.worldTilt)
+            return;
+
+        if (gameController.gameType == GameType.SpeedRun && !timer.isTiming())
             return;
         
         //Store the horizontal axis value in a float 
@@ -114,6 +122,9 @@ public class PlayerController : MonoBehaviour
         gameOverScreen.SetActive(true);
         print("Yay! You Win. Your Time Was " + timer.GetTime().ToString("F2"));
         soundController.PlayWinSound();
+
+        if (gameController.gameType == GameType.SpeedRun)
+            timer.StopTimer();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -126,6 +137,9 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             soundController.PlayCollisionSound(collision.gameObject);
+
+            if (gameController.wallType == WallType.Punishing)
+                StartCoroutine(ResetPlayer());
 
         }
     }
@@ -148,5 +162,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<Renderer>().material.color = originalColour;
         resetting = false;
     }
+
+  
 
 }
