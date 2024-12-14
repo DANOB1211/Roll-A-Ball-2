@@ -15,7 +15,11 @@ public class PlayerController : MonoBehaviour
     GameObject resetPoint;
     bool resetting = false;
     Color originalColour;
+
+    //Controllers
     public CameraController cameraController;
+    SoundController soundController;
+    GameController gameController;
   
 
    
@@ -38,12 +42,19 @@ public class PlayerController : MonoBehaviour
         originalColour = GetComponent<Renderer>().material.color;
 
         cameraController = FindFirstObjectByType<CameraController>();
+
+        soundController = FindObjectOfType<SoundController>();
+
+        gameController = FindObjectOfType<GameController>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         if (resetting)
+            return;
+
+        if (gameController.controlType == ControlType.worldTilt)
             return;
         
         //Store the horizontal axis value in a float 
@@ -75,12 +86,15 @@ public class PlayerController : MonoBehaviour
     {
         if(other.gameObject.tag == "Pickup")
         {
+            
             //Destroy the collided object 
             Destroy(other.gameObject);
             //Decrement the pickup count
             pickupCount--;
             //Run the check pickups function
             CheckPickups();
+
+            soundController.PlayPickupSound();
         }
     }
 
@@ -99,6 +113,7 @@ public class PlayerController : MonoBehaviour
         timer.StopTimer();
         gameOverScreen.SetActive(true);
         print("Yay! You Win. Your Time Was " + timer.GetTime().ToString("F2"));
+        soundController.PlayWinSound();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -106,6 +121,12 @@ public class PlayerController : MonoBehaviour
         if(collision.gameObject.CompareTag("Respawn"))
         {
             StartCoroutine(ResetPlayer());
+        }
+
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            soundController.PlayCollisionSound(collision.gameObject);
+
         }
     }
 
