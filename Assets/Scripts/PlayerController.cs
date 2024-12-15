@@ -138,8 +138,7 @@ public class PlayerController : MonoBehaviour
         {
             soundController.PlayCollisionSound(collision.gameObject);
 
-            if (gameController.wallType == WallType.Punishing)
-                StartCoroutine(ResetPlayer());
+           
 
         }
     }

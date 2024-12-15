@@ -5,14 +5,12 @@ using UnityEngine;
 public enum ControlType { Normal, worldTilt }
 public enum GameType { Normal, SpeedRun }
 
-public enum WallType { Normal, Punishing }
-
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
     public GameType gameType;
     public ControlType controlType;
-    public WallType wallType;
+ 
 
     private void Awake()
     {
@@ -51,13 +49,7 @@ public class GameController : MonoBehaviour
             controlType = ControlType.Normal;
     }
 
-    //Toggles between punishing walls on or off
-    public void ToggleWallType(bool _punishing)
-    {
-        if (_punishing)
-            wallType = WallType.Punishing;
-        else
-            wallType = WallType.Normal;
-    }
+   
+    
 
 }
